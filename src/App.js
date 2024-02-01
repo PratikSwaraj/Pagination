@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 export default function App() {
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
+  const [error, setError] = useState("");
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -12,7 +13,7 @@ export default function App() {
     )
       .then((res) => res.json())
       .then((json) => setData(json))
-      .catch((err) => console.error(err));
+      .catch((err) => setError(err));
   }, []);
 
   const nextPage = () => {
@@ -32,38 +33,44 @@ export default function App() {
 
   return (
     <div className="App">
-      <h1>Employee Data Table</h1>
-      <table className="tables">
-        <thead className="table-header">
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-          </tr>
-        </thead>
-        <tbody className="table-body">
-          {currentPageData.map((item) => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>{item.name}</td>
-              <td>{item.email}</td>
-              <td>{item.role}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <br />
-      <br />
-      <div className="scroll">
-        <button className="scroll-button" onClick={prevPage}>
-          Previous
-        </button>
-        <div className="page">{page}</div>
-        <button className="scroll-button" onClick={nextPage}>
-          Next
-        </button>
-      </div>
+      {error ? (
+        <div>{error}</div>
+      ) : (
+        <>
+          <h1>Employee Data Table</h1>
+          <table className="tables">
+            <thead className="table-header">
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+              </tr>
+            </thead>
+            <tbody className="table-body">
+              {currentPageData.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.id}</td>
+                  <td>{item.name}</td>
+                  <td>{item.email}</td>
+                  <td>{item.role}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <br />
+          <br />
+          <div className="scroll">
+            <button className="scroll-button" onClick={prevPage}>
+              Previous
+            </button>
+            <div className="page">{page}</div>
+            <button className="scroll-button" onClick={nextPage}>
+              Next
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
